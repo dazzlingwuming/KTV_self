@@ -1,0 +1,33 @@
+.idea/
+.gradle/
+*.iml
+
+# Android / Gradle
+**/build/
+**/.cxx/
+local.properties
+captures/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# Logs / temp
+*.log
+*.tmp
+*.temp
+
+# Host runtime outputs
+apps/host-separator/storage/
+apps/host-separator/models/*.ckpt
+
+# OS files
+.DS_Store
+Thumbs.db

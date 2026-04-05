@@ -1,0 +1,9 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "session_id": "string",
+    "bind_status": "bound",
+    "mobile_count": 1
+  }
+}

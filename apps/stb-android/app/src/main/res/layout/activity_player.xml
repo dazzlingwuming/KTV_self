@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        app:resize_mode="fit"
+        app:show_timeout="0"
+        app:use_controller="false" />
+
+    <LinearLayout
+        android:id="@+id/qrCard"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:background="#B8121419"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/qrImageView"
+            android:layout_width="132dp"
+            android:layout_height="132dp"
+            android:adjustViewBounds="true"
+            android:background="#FFFFFF"
+            android:contentDescription="QR code"
+            android:padding="8dp"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="手机扫码点歌"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="播放过程中可继续扫码加歌"
+            android:textColor="#C0C9D4"
+            android:textSize="12sp" />
+    </LinearLayout>
+</FrameLayout>

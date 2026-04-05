@@ -1,0 +1,8 @@
+{
+  "method": "POST",
+  "path": "/api/session/bind",
+  "body": {
+    "session_id": "string",
+    "sign": "string"
+  }
+}

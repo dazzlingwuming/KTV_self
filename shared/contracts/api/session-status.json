@@ -1,0 +1,16 @@
+{
+  "method": "GET",
+  "path": "/api/session/status",
+  "response": {
+    "code": 0,
+    "message": "ok",
+    "data": {
+      "session_id": "string",
+      "bind_status": "unbound|bound",
+      "device_name": "Living Room TV",
+      "current_song": null,
+      "web_url": "http://192.168.1.10:8080/index.html",
+      "qr_payload": "{...}"
+    }
+  }
+}
