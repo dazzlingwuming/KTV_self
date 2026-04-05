@@ -23,7 +23,7 @@ shared/             契约与共享定义
 ## 三端职责
 
 ### 机顶盒 Android
-
+![img_2.png](img_2.png)![img_3.png](img_3.png)![img_4.png](img_4.png)![img_5.png](img_5.png)![img_6.png](img_6.png)![img_7.png](img_7.png)
 负责：
 
 - B 站搜索
@@ -53,7 +53,7 @@ shared/             契约与共享定义
 ### 手机控制页
 
 负责：
-
+![img.png](img.png)![img_1.png](img_1.png)
 - 扫码绑定
 - 搜索
 - 下载并分离
