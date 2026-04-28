@@ -2,91 +2,902 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>家庭 KTV 控制页</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>KTV</title>
   <style>
-    :root{--bg:#f5f1e8;--card:#fff;--text:#1f1c17;--muted:#756d63;--line:#e3dbcf;--brand:#0d7c67;--brand-soft:#d6efe9;--danger:#c7685b;--ok:#ddf1ea;--ok-text:#156454;--warn:#f6ead1;--warn-text:#8a6408;--err:#f8dddd;--err-text:#8c2f25;--idle:#ece9e3;--idle-text:#5a534b}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"PingFang SC","Microsoft YaHei",sans-serif}
-    .wrap{max-width:900px;margin:0 auto;padding:18px 16px 28px}.card{background:var(--card);border-radius:22px;padding:18px;margin-bottom:16px;box-shadow:0 12px 32px rgba(18,17,13,.08)}
-    .hero h1,.section-title{margin:0 0 10px}.hero p,.muted,.meta{color:var(--muted)}.section-title{font-size:24px}
-    .summary,.grid{display:grid;gap:12px}.summary{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:12px}.grid{grid-template-columns:1fr 1fr}
-    .cell{background:#faf7f2;border:1px solid var(--line);border-radius:16px;padding:14px}.value{display:block;font-size:22px;font-weight:800;margin-top:6px}
-    label{display:block;margin:12px 0 6px;font-size:14px;color:var(--muted)}input[type=text],input[type=search]{width:100%;padding:14px 15px;border-radius:14px;border:1px solid var(--line);font-size:16px}input[type=range]{width:100%;margin-top:8px}
-    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button{border:none;border-radius:14px;padding:10px 16px;font-size:15px;font-weight:700;background:var(--brand);color:#fff;cursor:pointer}button.secondary{background:var(--brand-soft);color:#0a6454}button.danger{background:var(--danger)}button:disabled{opacity:.45;cursor:not-allowed}
-    .badge{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;margin-right:8px}.ok{background:var(--ok);color:var(--ok-text)}.warn{background:var(--warn);color:var(--warn-text)}.err{background:var(--err);color:var(--err-text)}.idle{background:var(--idle);color:var(--idle-text)}
-    ul{list-style:none;margin:0;padding:0}li{border-top:1px solid var(--line);padding:14px 0}li:first-child{border-top:none;padding-top:0}
-    .title{font-size:18px;font-weight:800;line-height:1.45}.meta{margin-top:8px;font-size:14px;line-height:1.55}.item-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-    .progress{height:8px;background:#ede6da;border-radius:999px;overflow:hidden;margin-top:10px}.progress>div{height:100%;background:var(--brand);width:0}
-    .box{border-radius:16px;background:#f8f4ed;padding:14px}.mono{white-space:pre-wrap;word-break:break-all;background:#f7f4ee;color:#5f574e;border-radius:14px;padding:14px;font-size:12px;line-height:1.55}
-    .empty{color:var(--muted);padding:8px 0}.search-card{display:grid;grid-template-columns:110px 1fr;gap:14px}.thumb{width:110px;height:146px;border-radius:14px;background:#ece6da;object-fit:cover}.pager{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:12px}.pager-info{color:var(--muted);font-size:14px}
-    .mix-group{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)} .mix-row{display:flex;align-items:center;gap:12px;margin-top:8px}.mix-row label{margin:0;width:42px}.mix-row input{flex:1}.mix-value{min-width:36px;text-align:right;font-weight:700}
-    @media (max-width:720px){.summary,.grid{grid-template-columns:1fr}}
+    :root{
+      --bg:#090b16;
+      --bg-2:#12152a;
+      --panel:rgba(255,255,255,.08);
+      --panel-2:rgba(255,255,255,.12);
+      --line:rgba(255,255,255,.1);
+      --text:#f7f4ef;
+      --muted:#b9bfd3;
+      --blue:#79a6ff;
+      --mint:#84ffd8;
+      --pink:#ff98c7;
+      --gold:#ffd98e;
+      --danger:#ff7b7b;
+      --shadow:0 22px 60px rgba(0,0,0,.34);
+      --radius-xl:28px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --safe-top:max(16px, env(safe-area-inset-top));
+      --safe-bottom:max(16px, env(safe-area-inset-bottom));
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:"SF Pro Display","Avenir Next","PingFang SC","Microsoft YaHei",sans-serif;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(121,166,255,.34), transparent 26%),
+        radial-gradient(circle at 84% 18%, rgba(255,152,199,.26), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(132,255,216,.16), transparent 34%),
+        linear-gradient(180deg, #0b0e1c 0%, #0d1020 36%, #090b16 100%);
+      overflow:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:34px 34px;
+      mask-image:linear-gradient(180deg, rgba(0,0,0,.45), transparent 82%);
+    }
+    .aurora{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .orb{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(10px);
+      animation:float 15s ease-in-out infinite;
+      opacity:.75;
+    }
+    .orb.a{width:220px;height:220px;left:-40px;top:70px;background:radial-gradient(circle, rgba(121,166,255,.34), rgba(121,166,255,0))}
+    .orb.b{width:260px;height:260px;right:-60px;top:120px;background:radial-gradient(circle, rgba(255,152,199,.28), rgba(255,152,199,0));animation-delay:-5s}
+    .orb.c{width:320px;height:320px;left:24%;bottom:-90px;background:radial-gradient(circle, rgba(132,255,216,.18), rgba(132,255,216,0));animation-delay:-8s}
+    .toast{
+      position:fixed;
+      left:50%;
+      top:calc(var(--safe-top) + 2px);
+      transform:translate(-50%,-8px);
+      width:min(86vw, 420px);
+      z-index:30;
+      padding:12px 14px;
+      border-radius:18px;
+      background:rgba(16,18,34,.76);
+      border:1px solid rgba(255,255,255,.1);
+      backdrop-filter:blur(18px);
+      box-shadow:var(--shadow);
+      opacity:0;
+      transition:opacity .22s ease, transform .22s ease;
+      pointer-events:none;
+      font-size:13px;
+    }
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .toast strong{
+      display:inline-block;
+      color:var(--mint);
+      margin-right:8px;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .app{
+      position:relative;
+      z-index:1;
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .device{
+      width:min(100%, 430px);
+      height:min(100%, 920px);
+      border-radius:34px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 28px 90px rgba(0,0,0,.4);
+      backdrop-filter:blur(10px);
+      overflow:hidden;
+      position:relative;
+    }
+    .statusbar{
+      position:absolute;
+      inset:0 0 auto 0;
+      z-index:8;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:calc(var(--safe-top) + 2px) 18px 10px;
+      font-size:12px;
+      color:rgba(255,255,255,.92);
+      pointer-events:none;
+    }
+    .viewport{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+    }
+    .screens{
+      display:flex;
+      width:400%;
+      height:100%;
+      transform:translateX(calc(var(--screen, 0) * -25%));
+      transition:transform .45s cubic-bezier(.22,.61,.36,1);
+    }
+    .screen{
+      width:25%;
+      height:100%;
+      flex:0 0 25%;
+      overflow:auto;
+      padding:calc(var(--safe-top) + 34px) 16px calc(var(--safe-bottom) + 96px);
+      scrollbar-width:none;
+    }
+    .screen::-webkit-scrollbar{display:none}
+    .stack{display:grid;gap:14px}
+    .hero{
+      position:relative;
+      min-height:330px;
+      border-radius:30px;
+      overflow:hidden;
+      padding:18px;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(255,255,255,.16), transparent 24%),
+        linear-gradient(155deg, rgba(121,166,255,.92), rgba(114,114,255,.74) 44%, rgba(255,152,199,.78) 100%);
+      box-shadow:0 22px 44px rgba(20,22,52,.36);
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:-24px;
+      top:-24px;
+      width:140px;height:140px;border-radius:50%;
+      background:rgba(255,255,255,.14);
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      left:-18px;
+      bottom:-32px;
+      width:170px;height:170px;border-radius:42% 58% 61% 39%;
+      background:rgba(132,255,216,.26);
+      transform:rotate(-14deg);
+    }
+    .hero-top{
+      position:relative;
+      z-index:1;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .hero-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.16);
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      backdrop-filter:blur(10px);
+    }
+    .hero-count{
+      display:grid;
+      gap:8px;
+      justify-items:end;
+    }
+    .hero-count span{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      font-size:11px;
+      color:rgba(255,255,255,.88);
+    }
+    .hero-main{
+      position:relative;
+      z-index:1;
+      margin-top:24px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 130px;
+      gap:16px;
+      align-items:end;
+    }
+    .disc{
+      width:130px;height:130px;border-radius:50%;
+      background:
+        radial-gradient(circle, #1e2245 0 14%, #fff 14% 18%, #1b2140 18% 24%, transparent 24%),
+        repeating-radial-gradient(circle, rgba(255,255,255,.09) 0 2px, rgba(0,0,0,.18) 2px 5px),
+        radial-gradient(circle, #1b2140 0%, #13182d 70%, #27305b 100%);
+      box-shadow:inset 0 0 0 8px rgba(255,255,255,.08), 0 18px 24px rgba(18,22,44,.26);
+      animation:spin 11s linear infinite;
+    }
+    .eyebrow{
+      color:rgba(255,255,255,.78);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-weight:800;
+    }
+    .song{
+      margin-top:10px;
+      font-size:34px;
+      line-height:.96;
+      font-weight:800;
+      letter-spacing:-.05em;
+      word-break:break-word;
+    }
+    .meta{
+      margin-top:12px;
+      color:rgba(255,255,255,.86);
+      font-size:13px;
+      line-height:1.7;
+    }
+    .hero-footer{
+      position:relative;
+      z-index:1;
+      margin-top:18px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .mini{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      font-size:12px;
+    }
+    .card{
+      border-radius:24px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(16px);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card-body{padding:16px}
+    .title-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .title-row h2,
+    .title-row h3{
+      margin:0;
+      font-size:18px;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      font-weight:800;
+    }
+    .title-row p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:11px;
+      white-space:nowrap;
+    }
+    .chip[data-loading="true"]{
+      color:#fff;
+      background:rgba(121,166,255,.18);
+      border-color:rgba(121,166,255,.18);
+    }
+    .field-grid{display:grid;gap:12px}
+    .field label{
+      display:block;
+      margin:0 0 8px;
+      color:var(--muted);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:700;
+    }
+    .field input[type=text],
+    .field input[type=search]{
+      width:100%;
+      border:none;
+      outline:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius:16px;
+      padding:14px 14px;
+      transition:transform .18s ease, outline-color .18s ease, background .18s ease;
+    }
+    .field input[type=text]:focus,
+    .field input[type=search]:focus{
+      outline-color:rgba(121,166,255,.34);
+      background:rgba(255,255,255,.1);
+      transform:translateY(-1px);
+    }
+    .field input[type=range]{width:100%;accent-color:#79a6ff}
+    .btn-grid,
+    .transport{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    button{
+      border:none;
+      border-radius:999px;
+      padding:11px 15px;
+      background:linear-gradient(135deg, #7aa8ff, #6f83ff);
+      color:#fff;
+      font-size:14px;
+      font-weight:800;
+      letter-spacing:.02em;
+      cursor:pointer;
+      box-shadow:0 12px 22px rgba(73,94,255,.22);
+      transition:transform .18s ease, filter .18s ease, opacity .18s ease;
+    }
+    button:hover{transform:translateY(-1px);filter:saturate(1.05)}
+    button:disabled{opacity:.45;transform:none;filter:none;cursor:not-allowed}
+    button.secondary{
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      box-shadow:none;
+    }
+    button.danger{
+      background:var(--danger);
+      box-shadow:none;
+    }
+    .button-busy{
+      position:relative;
+      overflow:hidden;
+    }
+    .button-busy::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent);
+      transform:translateX(-100%);
+      animation:sweep 1s linear infinite;
+    }
+    .mix-box{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      display:grid;
+      gap:10px;
+    }
+    .mix-note{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+    .mix-row{
+      display:grid;
+      grid-template-columns:54px minmax(0,1fr) 40px;
+      gap:10px;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .mix-row strong{color:var(--text);text-align:right}
+    .status-line{
+      min-height:22px;
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+    .quick-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+    .quick{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .quick label{
+      display:block;
+      color:var(--muted);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.15em;
+    }
+    .quick strong{
+      display:block;
+      margin-top:8px;
+      font-size:22px;
+      line-height:1.06;
+      letter-spacing:-.04em;
+      word-break:break-word;
+    }
+    .progress{
+      margin-top:14px;
+      height:10px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.08);
+    }
+    .progress > div{
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg, var(--blue), var(--mint), var(--gold));
+      box-shadow:0 0 14px rgba(121,166,255,.18);
+    }
+    .timeline{
+      display:grid;
+      gap:8px;
+      grid-template-columns:auto 1fr auto;
+      align-items:center;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .bars{
+      display:flex;
+      align-items:flex-end;
+      gap:5px;
+      height:48px;
+      margin-top:16px;
+    }
+    .bars span{
+      width:7px;
+      border-radius:999px;
+      background:linear-gradient(180deg, var(--blue), var(--mint));
+      height:42%;
+      animation:bars 1.08s ease-in-out infinite;
+      transform-origin:bottom;
+    }
+    .bars span:nth-child(2n){background:linear-gradient(180deg, var(--pink), var(--gold))}
+    .bars span:nth-child(1){animation-delay:-.1s}
+    .bars span:nth-child(2){height:72%;animation-delay:-.55s}
+    .bars span:nth-child(3){height:46%;animation-delay:-.84s}
+    .bars span:nth-child(4){height:86%;animation-delay:-.24s}
+    .bars span:nth-child(5){height:58%;animation-delay:-.68s}
+    .bars span:nth-child(6){height:74%;animation-delay:-.4s}
+    .bars span:nth-child(7){height:34%;animation-delay:-.9s}
+    .bars span:nth-child(8){height:88%;animation-delay:-.12s}
+    .bars span:nth-child(9){height:46%;animation-delay:-.62s}
+    .bars span:nth-child(10){height:64%;animation-delay:-.72s}
+    .list{
+      list-style:none;
+      margin:0;
+      padding:0;
+      display:grid;
+      gap:12px;
+    }
+    .item{
+      position:relative;
+      overflow:hidden;
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .item::before{
+      content:"";
+      position:absolute;
+      left:0;top:14px;bottom:14px;width:4px;
+      border-radius:999px;
+      background:linear-gradient(180deg, var(--blue), var(--mint), var(--gold));
+    }
+    .result{
+      display:grid;
+      grid-template-columns:84px minmax(0,1fr);
+      gap:14px;
+      align-items:start;
+    }
+    .thumb{
+      width:84px;
+      aspect-ratio:3/4;
+      border-radius:16px;
+      object-fit:cover;
+      background:linear-gradient(160deg, #7aa8ff, #8ff0da 62%, #ffda92);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .eyeline{
+      color:var(--blue);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:800;
+    }
+    .item-title{
+      margin:10px 0 0;
+      font-size:24px;
+      line-height:1.1;
+      font-weight:800;
+      letter-spacing:-.04em;
+      word-break:break-word;
+    }
+    .item-meta{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.7;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      padding:5px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      border:1px solid transparent;
+      margin-right:8px;
+    }
+    .ok{background:rgba(21,127,111,.18);color:var(--mint);border-color:rgba(21,127,111,.14)}
+    .warn{background:rgba(180,83,9,.16);color:var(--gold);border-color:rgba(180,83,9,.14)}
+    .err{background:rgba(255,123,123,.16);color:#ffc0c0;border-color:rgba(255,123,123,.14)}
+    .idle{background:rgba(255,255,255,.08);color:var(--muted);border-color:rgba(255,255,255,.08)}
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:12px;
+    }
+    .tag strong{color:var(--text)}
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    .split{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+    .marker{
+      width:52px;height:52px;
+      display:grid;place-items:center;
+      border-radius:16px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+    .marker.small{
+      padding:8px;
+      font-size:15px;
+      line-height:1.2;
+      text-align:center;
+    }
+    .marker small{
+      display:block;
+      color:var(--muted);
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .empty{
+      padding:20px;
+      border-radius:20px;
+      background:rgba(255,255,255,.06);
+      border:1px dashed rgba(255,255,255,.12);
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.8;
+    }
+    .empty strong{
+      display:block;
+      margin-bottom:6px;
+      color:var(--text);
+      font-size:16px;
+    }
+    .mono{
+      margin:0;
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:#d0d5e8;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family:"SFMono-Regular","Cascadia Code","Consolas",monospace;
+      font-size:12px;
+      line-height:1.75;
+    }
+    .fab{
+      position:fixed;
+      left:50%;
+      bottom:calc(var(--safe-bottom) + 6px);
+      transform:translateX(-50%);
+      z-index:24;
+      display:none;
+      gap:8px;
+      padding:8px;
+      border-radius:999px;
+      background:rgba(14,16,30,.8);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter:blur(14px);
+      box-shadow:var(--shadow);
+    }
+    .fab button{min-width:88px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes bars{50%{transform:scaleY(1.18)}}
+    @keyframes sweep{to{transform:translateX(100%)}}
+    @media (max-width:440px){
+      .screen{padding-left:12px;padding-right:12px}
+      .hero-main{grid-template-columns:1fr}
+      .disc{width:116px;height:116px;justify-self:end}
+      .result{grid-template-columns:72px minmax(0,1fr)}
+      .thumb{width:72px}
+      .split{grid-template-columns:1fr}
+      .marker{width:48px;height:48px}
+      .btn-grid button,
+      .transport button,
+      .actions button{flex:1 1 calc(50% - 4px)}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="card hero">
-      <h1>家庭 KTV 控制页</h1>
-      <p>多人扫码进入同一会话，共享公共队列、下载状态和播放状态。</p>
-      <div class="summary">
-        <div class="cell"><div class="muted">连接状态</div><span id="socketStatus" class="value">未连接</span></div>
-        <div class="cell"><div class="muted">在线手机数</div><span id="clientCount" class="value">0</span></div>
-        <div class="cell"><div class="muted">当前播放</div><span id="heroNowPlaying" class="value" style="font-size:18px">暂无播放</span></div>
-      </div>
-      <label for="sessionId">Session ID</label><input id="sessionId" type="text">
-      <label for="clientName">客户端名称</label><input id="clientName" type="text" placeholder="Phone-777">
-      <label for="keyword">搜索</label><input id="keyword" type="search" placeholder="输入歌名或歌手">
-      <div class="actions">
-        <button id="refreshBtn" type="button" class="secondary">刷新</button>
-        <button id="bindBtn" type="button">绑定</button>
-        <button id="searchBtn" type="button">搜索</button>
-        <button id="clearSearchBtn" type="button" class="secondary">清空搜索</button>
-      </div>
-      <div class="actions">
-        <button id="nextBtn" type="button" class="secondary">下一首</button>
-        <button id="pauseBtn" type="button" class="secondary">暂停</button>
-        <button id="resumeBtn" type="button" class="secondary">继续</button>
-      </div>
-      <label for="volumeRange">总音量</label><input id="volumeRange" type="range" min="0" max="100" value="100">
-      <div id="mixControls" class="mix-group" style="display:none">
-        <div class="muted">人声和伴奏可独立调节</div>
-        <div class="mix-row"><label for="vocalRange">人声</label><input id="vocalRange" type="range" min="0" max="100" value="100"><span id="vocalValue" class="mix-value">100</span></div>
-        <div class="mix-row"><label for="accRange">伴奏</label><input id="accRange" type="range" min="0" max="100" value="100"><span id="accValue" class="mix-value">100</span></div>
-      </div>
-      <p id="statusText" class="muted" style="margin-top:10px"></p>
-    </section>
+  <div class="aurora">
+    <div class="orb a"></div>
+    <div class="orb b"></div>
+    <div class="orb c"></div>
+  </div>
+  <div id="statusToast" class="toast"><strong>System</strong><span id="statusToastText">准备就绪</span></div>
 
-    <div class="grid">
-      <section class="card"><h2 class="section-title">当前播放</h2><div id="playerView"></div></section>
-      <section class="card">
-        <h2 class="section-title">最近下载状态</h2><div id="downloadView" class="box"></div>
-        <h3 style="margin:16px 0 10px">文件状态</h3><pre id="fileStatus" class="mono">尚未查询文件状态</pre>
-      </section>
+  <div class="app">
+    <div class="device">
+      <div class="statusbar">
+        <span>20:24</span>
+        <span>KTV</span>
+        <span>•••</span>
+      </div>
+
+      <div class="viewport">
+        <div id="screens" class="screens" style="--screen:0">
+          <section class="screen">
+            <div class="stack">
+              <div class="hero">
+                <div class="hero-top">
+                  <span class="hero-tag">Now Playing</span>
+                  <div class="hero-count">
+                    <span>队列 <strong id="queueCount">0</strong></span>
+                    <span>曲库 <strong id="localCount">0</strong></span>
+                  </div>
+                </div>
+                <div id="playerView"></div>
+              </div>
+
+              <div class="card">
+                <div class="card-body">
+                  <div class="title-row">
+                    <div>
+                      <h2>控制塔</h2>
+                      <p>把所有动作收在最顺手的一屏里。</p>
+                    </div>
+                    <span class="chip">Live</span>
+                  </div>
+
+                  <div class="field-grid">
+                    <div class="field">
+                      <label for="sessionId">Session ID</label>
+                      <input id="sessionId" type="text">
+                    </div>
+                    <div class="field">
+                      <label for="clientName">客户端名称</label>
+                      <input id="clientName" type="text" placeholder="Phone-777">
+                    </div>
+                  </div>
+
+                  <div class="field" style="margin-top:12px">
+                    <label for="volumeRange">总音量</label>
+                    <input id="volumeRange" type="range" min="0" max="100" value="100">
+                  </div>
+
+                  <div class="btn-grid">
+                    <button id="bindBtn" type="button">绑定</button>
+                    <button id="refreshBtn" type="button" class="secondary">刷新</button>
+                    <button id="nextBtn" type="button">下一首</button>
+                    <button id="pauseBtn" type="button" class="secondary">暂停</button>
+                    <button id="resumeBtn" type="button" class="secondary">继续</button>
+                  </div>
+
+                  <div id="mixControls" class="mix-box" style="display:none">
+                    <div class="mix-note">伴奏分离就绪后可单独调节。</div>
+                    <div class="mix-row">
+                      <span>人声</span>
+                      <input id="vocalRange" type="range" min="0" max="100" value="100">
+                      <strong id="vocalValue">100</strong>
+                    </div>
+                    <div class="mix-row">
+                      <span>伴奏</span>
+                      <input id="accRange" type="range" min="0" max="100" value="100">
+                      <strong id="accValue">100</strong>
+                    </div>
+                  </div>
+
+                  <div id="statusText" class="status-line"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen">
+            <div class="stack">
+              <div class="card">
+                <div class="card-body">
+                  <div class="title-row">
+                    <div>
+                      <h2>搜歌</h2>
+                      <p>只保留搜索和加入任务这一个核心动作。</p>
+                    </div>
+                    <span id="searchChip" class="chip">Search</span>
+                  </div>
+
+                  <div class="field">
+                    <label for="keyword">搜索 B 站歌曲</label>
+                    <input id="keyword" type="search" placeholder="歌名 / 歌手 / 版本">
+                  </div>
+
+                  <div class="btn-grid">
+                    <button id="searchBtn" type="button">搜索</button>
+                    <button id="clearSearchBtn" type="button" class="secondary">清空</button>
+                  </div>
+                </div>
+              </div>
+
+              <ul id="results" class="list"></ul>
+              <div id="searchPager" class="timeline"></div>
+            </div>
+          </section>
+
+          <section class="screen">
+            <div class="stack">
+              <div class="card">
+                <div class="card-body">
+                  <div class="title-row">
+                    <div>
+                      <h2>公共队列</h2>
+                      <p>谁点的、轮到哪首、是否就绪，一眼看清。</p>
+                    </div>
+                    <span id="queueChip" class="chip">Queue</span>
+                  </div>
+                  <ul id="queue" class="list"></ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen">
+            <div class="stack">
+              <div class="quick-grid">
+                <div class="quick">
+                  <label>Socket</label>
+                  <strong id="socketStatus">未连接</strong>
+                </div>
+                <div class="quick">
+                  <label>在线手机</label>
+                  <strong id="clientCount">0</strong>
+                </div>
+                <div class="quick">
+                  <label>当前播放</label>
+                  <strong id="heroNowPlaying">暂无播放</strong>
+                </div>
+                <div class="quick">
+                  <label>最近任务</label>
+                  <strong id="sideLatestTask">暂无任务</strong>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-body">
+                  <div class="title-row">
+                    <div>
+                      <h2>本地曲库</h2>
+                      <p>本地点歌、补分离、删缓存都在这里。</p>
+                    </div>
+                    <span id="libraryChip" class="chip">Library</span>
+                  </div>
+                  <ul id="localList" class="list"></ul>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-body">
+                  <div class="title-row">
+                    <div>
+                      <h3>文件状态</h3>
+                    </div>
+                  </div>
+                  <pre id="fileStatus" class="mono">尚未查询文件状态</pre>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-body">
+                  <div class="title-row">
+                    <div>
+                      <h3>调试</h3>
+                    </div>
+                  </div>
+                  <pre id="output" class="mono"></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="fab">
+        <button id="navHome" type="button">播放</button>
+        <button id="navSearch" type="button" class="secondary">搜索</button>
+        <button id="navQueue" type="button" class="secondary">队列</button>
+        <button id="navLibrary" type="button" class="secondary">曲库</button>
+      </div>
     </div>
-
-    <section class="card"><h2 class="section-title">搜索结果</h2><ul id="results"></ul><div id="searchPager" class="pager"></div></section>
-    <section class="card"><h2 class="section-title">公共队列</h2><ul id="queue"></ul></section>
-    <section class="card"><h2 class="section-title">本地资源</h2><ul id="localList"></ul></section>
-    <section class="card"><h2 class="section-title">会话调试信息</h2><pre id="output" class="mono"></pre></section>
   </div>
 
   <script>
     const storageKeys={sessionId:"ktv_session_id",clientId:"ktv_client_id",clientName:"ktv_client_name"};
     const el={
+      screens:document.getElementById("screens"),
       sessionId:document.getElementById("sessionId"),clientName:document.getElementById("clientName"),keyword:document.getElementById("keyword"),
       socketStatus:document.getElementById("socketStatus"),clientCount:document.getElementById("clientCount"),heroNowPlaying:document.getElementById("heroNowPlaying"),
-      statusText:document.getElementById("statusText"),output:document.getElementById("output"),results:document.getElementById("results"),
-      searchPager:document.getElementById("searchPager"),queue:document.getElementById("queue"),localList:document.getElementById("localList"),
-      playerView:document.getElementById("playerView"),downloadView:document.getElementById("downloadView"),fileStatus:document.getElementById("fileStatus"),
+      searchCount:null,queueCount:document.getElementById("queueCount"),localCount:document.getElementById("localCount"),
+      searchChip:document.getElementById("searchChip"),queueChip:document.getElementById("queueChip"),libraryChip:document.getElementById("libraryChip"),
+      sideLatestTask:document.getElementById("sideLatestTask"),
+      statusToast:document.getElementById("statusToast"),statusToastText:document.getElementById("statusToastText"),statusText:document.getElementById("statusText"),
+      output:document.getElementById("output"),results:document.getElementById("results"),searchPager:document.getElementById("searchPager"),
+      queue:document.getElementById("queue"),localList:document.getElementById("localList"),playerView:document.getElementById("playerView"),
+      downloadView:null,fileStatus:document.getElementById("fileStatus"),
       volumeRange:document.getElementById("volumeRange"),vocalRange:document.getElementById("vocalRange"),accRange:document.getElementById("accRange"),
       vocalValue:document.getElementById("vocalValue"),accValue:document.getElementById("accValue"),mixControls:document.getElementById("mixControls"),
       refreshBtn:document.getElementById("refreshBtn"),bindBtn:document.getElementById("bindBtn"),searchBtn:document.getElementById("searchBtn"),
       clearSearchBtn:document.getElementById("clearSearchBtn"),nextBtn:document.getElementById("nextBtn"),pauseBtn:document.getElementById("pauseBtn"),
-      resumeBtn:document.getElementById("resumeBtn")
+      resumeBtn:document.getElementById("resumeBtn"),
+      navHome:document.getElementById("navHome"),navSearch:document.getElementById("navSearch"),navQueue:document.getElementById("navQueue"),navLibrary:document.getElementById("navLibrary")
     };
-    const state={session:null,searchResults:[],searchPage:1,pageSize:5,queue:[],localList:[],player:null,lastDownload:null,socket:null,heartbeat:null,reconnect:null};
+    const state={session:null,searchResults:[],searchPage:1,pageSize:6,queue:[],localList:[],player:null,lastDownload:null,socket:null,heartbeat:null,reconnect:null,busy:{refresh:false,search:false},screen:0};
     const clientId=getOrCreateClientId();
     const query=new URLSearchParams(location.search);
+    let statusToastTimer=null;
 
     init();
 
@@ -94,43 +905,233 @@
       el.sessionId.value=query.get("session_id")||localStorage.getItem(storageKeys.sessionId)||"";
       el.clientName.value=localStorage.getItem(storageKeys.clientName)||`Phone-${clientId.slice(-4)}`;
       bindEvents();
+      setScreen(0);
       refreshAll().then(()=>{ if(query.get("session_id")) bindSession(); });
       document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") ensureSocket(); });
     }
 
     function bindEvents(){
-      el.refreshBtn.onclick=refreshAll; el.bindBtn.onclick=bindSession; el.searchBtn.onclick=searchSongs; el.clearSearchBtn.onclick=clearSearch;
-      el.nextBtn.onclick=playNext; el.pauseBtn.onclick=pausePlayer; el.resumeBtn.onclick=resumePlayer;
-      el.volumeRange.onchange=setVolume; el.vocalRange.onchange=setVocalVolume; el.accRange.onchange=setAccompanimentVolume;
+      el.refreshBtn.onclick=refreshAll;
+      el.bindBtn.onclick=bindSession;
+      el.searchBtn.onclick=searchSongs;
+      el.clearSearchBtn.onclick=clearSearch;
+      el.nextBtn.onclick=playNext;
+      el.pauseBtn.onclick=pausePlayer;
+      el.resumeBtn.onclick=resumePlayer;
+      el.navHome.onclick=()=>setScreen(0);
+      el.navSearch.onclick=()=>setScreen(1);
+      el.navQueue.onclick=()=>setScreen(2);
+      el.navLibrary.onclick=()=>setScreen(3);
+      el.volumeRange.onchange=setVolume;
+      el.vocalRange.onchange=setVocalVolume;
+      el.accRange.onchange=setAccompanimentVolume;
       el.keyword.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); searchSongs(); } });
       el.clientName.addEventListener("change",()=>localStorage.setItem(storageKeys.clientName,el.clientName.value.trim()));
       el.sessionId.addEventListener("change",()=>localStorage.setItem(storageKeys.sessionId,el.sessionId.value.trim()));
     }
 
-    async function refreshAll(){ await Promise.all([refreshSession(),refreshPlayer(),refreshQueue(),refreshLocal()]); ensureSocket(); }
-    async function refreshSession(){ const r=await getJson("/api/session/status"); state.session=r; const s=r?.data; if(s?.session_id){ el.sessionId.value=s.session_id; localStorage.setItem(storageKeys.sessionId,s.session_id); } renderStatus(); }
-    async function bindSession(){ const sid=el.sessionId.value.trim(); if(!sid){ setStatus("缺少 Session ID"); return; } localStorage.setItem(storageKeys.sessionId,sid); localStorage.setItem(storageKeys.clientName,el.clientName.value.trim()); const r=await postJson("/api/session/bind",{session_id:sid,client_id:clientId,client_name:el.clientName.value.trim(),sign:""}); if(r?.code&&r.code!==0){ setStatus(r.message||"绑定失败"); return; } state.session={data:{...(state.session?.data||{}),...(r.data||{})}}; renderStatus(); ensureSocket(true); }
-    async function searchSongs(){ const keyword=el.keyword.value.trim(); if(!keyword){ setStatus("请先输入关键词"); return; } setStatus(`正在搜索：${keyword}`); const r=await getJson(`/api/search/bilibili?keyword=${encodeURIComponent(keyword)}`); if(r?.code&&r.code!==0){ state.searchResults=[]; renderSearchResults(); setStatus(r.message||"搜索失败"); return; } state.searchResults=Array.isArray(r?.data?.list)?r.data.list:Array.isArray(r?.data?.items)?r.data.items:[]; state.searchPage=1; renderSearchResults(); setStatus(state.searchResults.length?`已找到 ${state.searchResults.length} 条结果`:"没有找到结果"); }
-    function clearSearch(){ state.searchResults=[]; state.searchPage=1; renderSearchResults(); setStatus("已清空搜索结果"); }
-    async function downloadSong(item){ const r=await postJson("/api/search/download",{client_id:clientId,client_name:el.clientName.value.trim()||null,source_type:item.source_type||"bilibili",source_id:item.source_id,title:item.title,title_b64:encodeBase64Utf8(item.title||""),artist:item.artist||null,artist_b64:item.artist?encodeBase64Utf8(item.artist):null,duration:item.duration||0,cover_url:item.cover_url||null}); if(r?.code&&r.code!==0){ setStatus(r.message||"加入本地下载失败"); return; } setStatus(`已加入本地下载：${normalizeTitle(item.title)}`); await refreshLocal(); }
-    async function refreshQueue(){ const r=await getJson("/api/queue/list"); state.queue=Array.isArray(r?.data?.items)?r.data.items:[]; renderQueue(); }
-    async function moveNext(id){ const r=await postJson("/api/queue/move-next",{queue_id:id}); setStatus(r?.data?.success?"已置顶为下一首":"置顶失败"); await refreshQueue(); }
-    async function removeItem(id){ const r=await postJson("/api/queue/remove",{queue_id:id}); setStatus(r?.data?.success?"已从队列移除":"移除失败"); await refreshQueue(); }
-    async function refreshPlayer(){ state.player=await getJson("/api/player/status"); renderPlayer(); }
-    async function playNext(){ await postJson("/api/player/next",{}); await refreshPlayer(); await refreshQueue(); }
-    async function pausePlayer(){ await postJson("/api/player/pause",{}); await refreshPlayer(); }
-    async function resumePlayer(){ await postJson("/api/player/resume",{}); await refreshPlayer(); }
-    async function setVolume(){ await postJson("/api/player/volume",{value:Number(el.volumeRange.value||100)}); await refreshPlayer(); }
-    async function setVocalVolume(){ await postJson("/api/player/vocal-volume",{value:Number(el.vocalRange.value||100)}); await refreshPlayer(); }
-    async function setAccompanimentVolume(){ await postJson("/api/player/accompaniment-volume",{value:Number(el.accRange.value||100)}); await refreshPlayer(); }
-    async function refreshLocal(){ const r=await getJson("/api/local/list"); state.localList=Array.isArray(r?.data?.list)?r.data.list:[]; renderLocal(); }
-    async function localOrder(songId){ const r=await postJson("/api/local/order",{song_id:songId,client_id:clientId,client_name:el.clientName.value.trim()||null}); setStatus(r?.data?.success?"已加入公共队列":"本地点歌失败"); await refreshQueue(); await refreshPlayer(); }
-    async function localSeparate(songId){ const r=await postJson("/api/local/separate",{song_id:songId}); setStatus(r?.data?.success?"已开始伴奏分离":"伴奏分离启动失败"); await refreshLocal(); }
-    async function localDelete(songId){ const r=await postJson("/api/local/delete",{song_id:songId}); setStatus(r?.data?.success?"已删除本地缓存":"删除缓存失败"); await refreshLocal(); await refreshQueue(); }
-    async function showFileStatus(songId){ const r=await getJson(`/api/local/file-status?song_id=${encodeURIComponent(songId)}`); el.fileStatus.textContent=JSON.stringify(r?.data||{},null,2); }
+    function setScreen(index){
+      state.screen=index;
+      el.screens.style.setProperty("--screen", String(index));
+      [
+        [el.navHome,0],
+        [el.navSearch,1],
+        [el.navQueue,2],
+        [el.navLibrary,3],
+      ].forEach(([button,screen])=>{
+        button.className=screen===index?"":"secondary";
+      });
+    }
+
+    async function refreshAll(){
+      if(state.busy.refresh) return;
+      state.busy.refresh=true;
+      syncBusyUi();
+      try{
+        await Promise.all([refreshSession(),refreshPlayer(),refreshQueue(),refreshLocal()]);
+        ensureSocket();
+        renderDownload();
+        setStatus("状态已刷新");
+      } finally {
+        state.busy.refresh=false;
+        syncBusyUi();
+      }
+    }
+
+    async function refreshSession(){
+      const r=await getJson("/api/session/status");
+      state.session=r;
+      const s=r?.data;
+      if(s?.session_id){
+        el.sessionId.value=s.session_id;
+        localStorage.setItem(storageKeys.sessionId,s.session_id);
+      }
+      renderStatus();
+    }
+
+    async function bindSession(){
+      const sid=el.sessionId.value.trim();
+      if(!sid){ setStatus("缺少 Session ID"); return; }
+      localStorage.setItem(storageKeys.sessionId,sid);
+      localStorage.setItem(storageKeys.clientName,el.clientName.value.trim());
+      const r=await postJson("/api/session/bind",{session_id:sid,client_id:clientId,client_name:el.clientName.value.trim(),sign:""});
+      if(r?.code&&r.code!==0){ setStatus(r.message||"绑定失败"); return; }
+      state.session={data:{...(state.session?.data||{}),...(r.data||{})}};
+      renderStatus();
+      ensureSocket(true);
+      setStatus("会话已绑定");
+    }
+
+    async function searchSongs(){
+      const keyword=el.keyword.value.trim();
+      if(!keyword){ setStatus("请先输入关键词"); return; }
+      if(state.busy.search) return;
+      state.busy.search=true;
+      syncBusyUi();
+      renderSearchResults();
+      setStatus(`正在搜索：${keyword}`);
+      try{
+        const r=await getJson(`/api/search/bilibili?keyword=${encodeURIComponent(keyword)}`);
+        if(r?.code&&r.code!==0){
+          state.searchResults=[];
+          renderSearchResults();
+          setStatus(r.message||"搜索失败");
+          return;
+        }
+        state.searchResults=Array.isArray(r?.data?.list)?r.data.list:Array.isArray(r?.data?.items)?r.data.items:[];
+        state.searchPage=1;
+        renderSearchResults();
+        renderStatus();
+        setScreen(1);
+        setStatus(state.searchResults.length?`已找到 ${state.searchResults.length} 条结果`:"没有找到结果");
+      } finally {
+        state.busy.search=false;
+        syncBusyUi();
+      }
+    }
+
+    function clearSearch(){
+      state.searchResults=[];
+      state.searchPage=1;
+      renderSearchResults();
+      renderStatus();
+      setStatus("已清空搜索结果");
+    }
+
+    async function downloadSong(item){
+      const r=await postJson("/api/search/download",{
+        client_id:clientId,
+        client_name:el.clientName.value.trim()||null,
+        source_type:item.source_type||"bilibili",
+        source_id:item.source_id,
+        title:item.title,
+        title_b64:encodeBase64Utf8(item.title||""),
+        artist:item.artist||null,
+        artist_b64:item.artist?encodeBase64Utf8(item.artist):null,
+        duration:item.duration||0,
+        cover_url:item.cover_url||null
+      });
+      if(r?.code&&r.code!==0){ setStatus(r.message||"加入本地下载失败"); return; }
+      setStatus(`已加入本地下载：${normalizeTitle(item.title)}`);
+      await refreshLocal();
+    }
+
+    async function refreshQueue(){
+      const r=await getJson("/api/queue/list");
+      state.queue=Array.isArray(r?.data?.items)?r.data.items:[];
+      renderQueue();
+      renderStatus();
+    }
+
+    async function moveNext(id){
+      const r=await postJson("/api/queue/move-next",{queue_id:id});
+      setStatus(r?.data?.success?"已置顶为下一首":"置顶失败");
+      await refreshQueue();
+    }
+
+    async function removeItem(id){
+      const r=await postJson("/api/queue/remove",{queue_id:id});
+      setStatus(r?.data?.success?"已从队列移除":"移除失败");
+      await refreshQueue();
+    }
+
+    async function refreshPlayer(){
+      state.player=await getJson("/api/player/status");
+      renderPlayer();
+    }
+
+    async function playNext(){
+      await postJson("/api/player/next",{});
+      await refreshPlayer();
+      await refreshQueue();
+      setStatus("已切到下一首");
+    }
+
+    async function pausePlayer(){
+      await postJson("/api/player/pause",{});
+      await refreshPlayer();
+      setStatus("播放已暂停");
+    }
+
+    async function resumePlayer(){
+      await postJson("/api/player/resume",{});
+      await refreshPlayer();
+      setStatus("播放已继续");
+    }
+
+    async function setVolume(){
+      await postJson("/api/player/volume",{value:Number(el.volumeRange.value||100)});
+      await refreshPlayer();
+    }
+
+    async function setVocalVolume(){
+      await postJson("/api/player/vocal-volume",{value:Number(el.vocalRange.value||100)});
+      await refreshPlayer();
+    }
+
+    async function setAccompanimentVolume(){
+      await postJson("/api/player/accompaniment-volume",{value:Number(el.accRange.value||100)});
+      await refreshPlayer();
+    }
+
+    async function refreshLocal(){
+      const r=await getJson("/api/local/list");
+      state.localList=Array.isArray(r?.data?.list)?r.data.list:[];
+      renderLocal();
+      renderStatus();
+    }
+
+    async function localOrder(songId){
+      const r=await postJson("/api/local/order",{song_id:songId,client_id:clientId,client_name:el.clientName.value.trim()||null});
+      setStatus(r?.data?.success?"已加入公共队列":"本地点歌失败");
+      await refreshQueue();
+      await refreshPlayer();
+      setScreen(2);
+    }
+
+    async function localSeparate(songId){
+      const r=await postJson("/api/local/separate",{song_id:songId});
+      setStatus(r?.data?.success?"已开始伴奏分离":"伴奏分离启动失败");
+      await refreshLocal();
+    }
+
+    async function localDelete(songId){
+      const r=await postJson("/api/local/delete",{song_id:songId});
+      setStatus(r?.data?.success?"已删除本地缓存":"删除缓存失败");
+      await refreshLocal();
+      await refreshQueue();
+    }
+
+    async function showFileStatus(songId){
+      const r=await getJson(`/api/local/file-status?song_id=${encodeURIComponent(songId)}`);
+      el.fileStatus.textContent=JSON.stringify(r?.data||{},null,2);
+      setStatus(`已查看文件状态：${shortenId(songId)}`);
+      setScreen(3);
+    }
 
     function ensureSocket(force=false){
-      const sid=el.sessionId.value.trim(); if(!sid) return;
+      const sid=el.sessionId.value.trim();
+      if(!sid) return;
       if(force&&state.socket){ state.socket.close(); state.socket=null; }
       if(state.socket&&[WebSocket.OPEN,WebSocket.CONNECTING].includes(state.socket.readyState)){ renderStatus(); return; }
       const params=new URLSearchParams({session_id:sid,client_id:clientId,client_name:el.clientName.value.trim()||""});
@@ -142,21 +1143,61 @@
       ws.onerror=()=>renderStatus();
       ws.onmessage=e=>{ try{ const p=JSON.parse(e.data); onSocket(p.event,p.data); }catch(err){ console.error(err); } };
     }
-    function startHeartbeat(){ stopHeartbeat(); state.heartbeat=setInterval(()=>{ if(state.socket?.readyState===WebSocket.OPEN){ try{ state.socket.send(JSON.stringify({type:"ping",at:Date.now()})); }catch(_){} } },12000); }
-    function stopHeartbeat(){ if(state.heartbeat){ clearInterval(state.heartbeat); state.heartbeat=null; } }
+
+    function startHeartbeat(){
+      stopHeartbeat();
+      state.heartbeat=setInterval(()=>{ if(state.socket?.readyState===WebSocket.OPEN){ try{ state.socket.send(JSON.stringify({type:"ping",at:Date.now()})); }catch(_){} } },12000);
+    }
+
+    function stopHeartbeat(){
+      if(state.heartbeat){ clearInterval(state.heartbeat); state.heartbeat=null; }
+    }
+
     function onSocket(event,data){
-      if(event==="queue_updated"){ state.queue=Array.isArray(data?.items)?data.items:state.queue; if(typeof data?.client_count==="number"&&state.session?.data) state.session.data.client_count=data.client_count; renderQueue(); renderStatus(); return; }
-      if(event==="player_updated"){ state.player={data}; renderPlayer(); return; }
-      if(event==="download_updated"){ state.lastDownload=data; renderDownload(); refreshLocal(); refreshQueue(); return; }
-      if(event==="separate_updated"){ refreshLocal(); refreshQueue(); if(data?.title){ setStatus(`分离状态更新：${normalizeTitle(data.title)} / ${data.separate_status||"-"}`); } }
+      if(event==="queue_updated"){
+        state.queue=Array.isArray(data?.items)?data.items:state.queue;
+        if(typeof data?.client_count==="number"&&state.session?.data) state.session.data.client_count=data.client_count;
+        renderQueue();
+        renderStatus();
+        return;
+      }
+      if(event==="player_updated"){
+        state.player={data};
+        renderPlayer();
+        return;
+      }
+      if(event==="download_updated"){
+        state.lastDownload=data;
+        renderDownload();
+        refreshLocal();
+        refreshQueue();
+        return;
+      }
+      if(event==="separate_updated"){
+        refreshLocal();
+        refreshQueue();
+        if(data?.title){ setStatus(`分离状态更新：${normalizeTitle(data.title)} / ${data.separate_status||"-"}`); }
+      }
     }
 
     function renderStatus(){
-      const s=state.session?.data||null; const clientCount=s?.client_count||s?.clientCount||0;
+      const s=state.session?.data||null;
+      const queueItems=state.queue.filter(it=>["waiting","playing"].includes(it.queue_status));
+      const clientCount=s?.client_count||s?.clientCount||0;
       el.output.textContent=JSON.stringify(state.session||{},null,2);
       el.socketStatus.textContent=state.socket&&state.socket.readyState===WebSocket.OPEN?"已连接":"未连接";
       el.clientCount.textContent=String(clientCount);
+      el.heroNowPlaying.textContent=normalizeTitle(state.player?.data?.title||"暂无播放");
+      el.queueCount.textContent=String(queueItems.length);
+      el.localCount.textContent=String(state.localList.length);
+      el.sideLatestTask.textContent=normalizeTitle(state.lastDownload?.title||"暂无任务");
       el.statusText.textContent=`客户端 ${clientId} / 在线手机 ${clientCount}`;
+      el.searchChip.textContent=state.busy.search?"搜索中...":`Search · ${state.searchResults.length}`;
+      el.queueChip.textContent=`Queue · ${queueItems.length}`;
+      el.libraryChip.textContent=`Library · ${state.localList.length}`;
+      el.searchChip.dataset.loading=String(state.busy.search);
+      el.queueChip.dataset.loading="false";
+      el.libraryChip.dataset.loading=String(state.busy.refresh);
     }
 
     function renderPlayer(){
@@ -165,114 +1206,280 @@
       el.heroNowPlaying.textContent=title;
       if(!p){
         el.mixControls.style.display="none";
-        el.playerView.innerHTML='<div class="empty">暂无播放器状态</div>';
+        el.playerView.innerHTML=`<div class="hero-main"><div><div class="eyebrow">Waiting</div><div class="song">暂无播放</div><div class="meta">开始点歌后，这里会成为当前演唱的主屏。</div></div><div class="disc"></div></div>`;
         return;
       }
       el.volumeRange.value=String(p.volume??100);
-      el.mixControls.style.display=p.mix_available?"block":"none";
+      el.mixControls.style.display=p.mix_available?"grid":"none";
       el.vocalRange.value=String(p.vocal_volume??100);
       el.accRange.value=String(p.accompaniment_volume??100);
       el.vocalValue.textContent=String(p.vocal_volume??100);
       el.accValue.textContent=String(p.accompaniment_volume??100);
-      el.playerView.innerHTML=`<div class="title">${escapeHtml(title)}</div><div class="meta">${badgeHtml(p.play_status||"idle")}<span>${formatTime(p.current_time_ms)} / ${formatTime(p.duration_ms)}</span><span style="margin-left:8px;">总音量 ${p.volume??100}</span>${p.mix_available?`<span style="margin-left:8px;">人声 ${p.vocal_volume??100} / 伴奏 ${p.accompaniment_volume??100}</span>`:""}</div>${p.error_message?`<div class="meta">错误：${escapeHtml(p.error_message)}</div>`:""}`;
+      el.playerView.innerHTML=`<div class="hero-main"><div><div class="eyebrow">Live</div><div class="song">${escapeHtml(title)}</div><div class="meta">${badgeHtml(p.play_status||"idle")} ${badgeHtml(p.mode||"origin")}<span>总音量 ${p.volume??100}</span>${p.mix_available?`<span> / 人声 ${p.vocal_volume??100} / 伴奏 ${p.accompaniment_volume??100}</span>`:""}</div><div class="hero-footer"><span class="mini">进度 ${formatTime(p.current_time_ms)}</span><span class="mini">总时长 ${formatTime(p.duration_ms)}</span><span class="mini">${p.mix_available?"混音已启用":"原始播放"}</span></div><div class="progress"><div style="width:${progressPercent(p.current_time_ms,p.duration_ms)}%"></div></div><div class="timeline"><span>${formatTime(p.current_time_ms)}</span><span></span><span>${formatTime(p.duration_ms)}</span></div><div class="bars">${renderBars()}</div>${p.error_message?`<div class="meta">错误：${escapeHtml(p.error_message)}</div>`:""}</div><div class="disc"></div></div>`;
     }
 
     function renderSearchResults(){
-      el.results.innerHTML=""; el.searchPager.innerHTML="";
-      if(!state.searchResults.length){ el.results.innerHTML='<li class="empty">没有找到结果</li>'; return; }
-      const total=state.searchResults.length,pageCount=Math.max(1,Math.ceil(total/state.pageSize));
+      el.results.innerHTML="";
+      el.searchPager.innerHTML="";
+      if(!state.searchResults.length){
+        el.results.innerHTML=`<li class="empty"><strong>${state.busy.search?"正在搜索候选曲目":"没有找到结果"}</strong>${state.busy.search?"系统正在向 B 站请求结果，请稍候。":"试试更短的歌名、歌手名或版本关键词。"} </li>`;
+        return;
+      }
+      const total=state.searchResults.length;
+      const pageCount=Math.max(1,Math.ceil(total/state.pageSize));
       state.searchPage=Math.min(Math.max(1,state.searchPage),pageCount);
       const start=(state.searchPage-1)*state.pageSize;
       const items=state.searchResults.slice(start,start+state.pageSize);
       items.forEach(item=>{
         const li=document.createElement("li");
-        li.innerHTML=`<div class="search-card"><img class="thumb" src="${escapeAttr(resolveCoverUrl(item.cover_url||""))}" alt="" onerror="this.style.visibility='hidden';this.parentElement.style.background='#ece6da';"><div><div class="title">${escapeHtml(normalizeTitle(item.title))}</div><div class="meta">${escapeHtml(item.artist||"Unknown")} / ${formatDurationSeconds(item.duration)}</div><div class="item-actions"></div></div></div>`;
+        li.className="item";
+        li.innerHTML=`<div class="result"><img class="thumb" src="${escapeAttr(resolveCoverUrl(item.cover_url||""))}" alt="" onerror="this.style.visibility='hidden';this.parentElement.style.gridTemplateColumns='1fr';"><div><div class="eyeline">Featured Candidate</div><div class="item-title">${escapeHtml(normalizeTitle(item.title))}</div><div class="item-meta">${escapeHtml(item.artist||"Unknown")}</div><div class="tags"><span class="tag">来源 <strong>${escapeHtml(item.source_type||"bilibili")}</strong></span><span class="tag">时长 <strong>${formatDurationSeconds(item.duration)}</strong></span></div><div class="actions"></div></div></div>`;
         const btn=document.createElement("button");
         btn.type="button";
         btn.textContent="下载并分离";
         btn.onclick=()=>downloadSong(item);
-        li.querySelector(".item-actions").appendChild(btn);
+        li.querySelector(".actions").appendChild(btn);
         el.results.appendChild(li);
       });
       renderSearchPager(pageCount,total);
     }
 
     function renderSearchPager(pageCount,total){
-      const info=document.createElement("div");
-      info.className="pager-info";
-      info.textContent=`第 ${state.searchPage} / ${pageCount} 页，共 ${total} 条`;
-      const actions=document.createElement("div");
-      actions.className="item-actions";
+      const left=document.createElement("span");
+      left.textContent=`第 ${state.searchPage} / ${pageCount} 页，共 ${total} 条`;
+      left.style.color="var(--muted)";
+      const fill=document.createElement("span");
+      const actions=document.createElement("span");
+      actions.style.display="flex";
+      actions.style.gap="8px";
       const prev=document.createElement("button");
-      prev.type="button"; prev.className="secondary"; prev.textContent="上一页"; prev.disabled=state.searchPage<=1; prev.onclick=()=>{ state.searchPage-=1; renderSearchResults(); };
+      prev.type="button";
+      prev.className="secondary";
+      prev.textContent="上一页";
+      prev.disabled=state.searchPage<=1;
+      prev.onclick=()=>{ state.searchPage-=1; renderSearchResults(); };
       actions.appendChild(prev);
       const next=document.createElement("button");
-      next.type="button"; next.className="secondary"; next.textContent="下一页"; next.disabled=state.searchPage>=pageCount; next.onclick=()=>{ state.searchPage+=1; renderSearchResults(); };
+      next.type="button";
+      next.className="secondary";
+      next.textContent="下一页";
+      next.disabled=state.searchPage>=pageCount;
+      next.onclick=()=>{ state.searchPage+=1; renderSearchResults(); };
       actions.appendChild(next);
-      el.searchPager.appendChild(info);
+      el.searchPager.appendChild(left);
+      el.searchPager.appendChild(fill);
       el.searchPager.appendChild(actions);
     }
 
     function renderQueue(){
       el.queue.innerHTML="";
       const items=state.queue.filter(it=>["waiting","playing"].includes(it.queue_status));
-      if(!items.length){ el.queue.innerHTML='<li class="empty">当前公共队列为空</li>'; return; }
+      if(!items.length){
+        el.queue.innerHTML='<li class="empty"><strong>当前公共队列为空</strong>从搜索或曲库加入歌曲后，队列会出现在这里。</li>';
+        return;
+      }
       items.forEach(it=>{
         const progress=it.download_progress??(it.download_status==="success"?100:0);
         const li=document.createElement("li");
-        li.innerHTML=`<div class="title">#${it.position} ${escapeHtml(normalizeTitle(it.title))}</div><div class="meta">点歌人：${escapeHtml(it.ordered_by_client_name||it.ordered_by_client_id||"-")}</div><div class="meta">${badgeHtml(it.queue_status)} ${badgeHtml(it.download_status)}</div>${it.skip_reason||it.error_message?`<div class="meta">提示：${escapeHtml(it.skip_reason||it.error_message)}</div>`:""}<div class="progress"><div style="width:${Math.max(0,Math.min(progress,100))}%"></div></div><div class="meta">下载进度 ${progress}%</div><div class="item-actions"></div>`;
-        const actions=li.querySelector(".item-actions");
+        li.className="item";
+        li.innerHTML=`<div class="split"><div class="marker">#${it.position}</div><div><div class="eyeline">Queue Slot</div><div class="item-title">${escapeHtml(normalizeTitle(it.title))}</div><div class="item-meta">点歌人：${escapeHtml(it.ordered_by_client_name||it.ordered_by_client_id||"-")}</div><div class="item-meta">${badgeHtml(it.queue_status)} ${badgeHtml(it.download_status)}</div>${it.skip_reason||it.error_message?`<div class="item-meta">提示：${escapeHtml(it.skip_reason||it.error_message)}</div>`:""}<div class="tags"><span class="tag">歌曲 ID <strong>${escapeHtml(shortenId(it.song_id))}</strong></span><span class="tag">下载进度 <strong>${progress}%</strong></span></div><div class="progress"><div style="width:${Math.max(0,Math.min(progress,100))}%"></div></div><div class="timeline"><span>下载进度</span><span></span><span>${progress}%</span></div><div class="actions"></div></div></div>`;
+        const actions=li.querySelector(".actions");
         const nextBtn=document.createElement("button");
-        nextBtn.type="button"; nextBtn.className="secondary"; nextBtn.textContent="置顶下一首"; nextBtn.disabled=it.queue_status!=="waiting"; nextBtn.onclick=()=>moveNext(it.queue_id); actions.appendChild(nextBtn);
+        nextBtn.type="button";
+        nextBtn.className="secondary";
+        nextBtn.textContent="置顶下一首";
+        nextBtn.disabled=it.queue_status!=="waiting";
+        nextBtn.onclick=()=>moveNext(it.queue_id);
+        actions.appendChild(nextBtn);
         const removeBtn=document.createElement("button");
-        removeBtn.type="button"; removeBtn.className="danger"; removeBtn.textContent="移除"; removeBtn.disabled=it.queue_status==="playing"; removeBtn.onclick=()=>removeItem(it.queue_id); actions.appendChild(removeBtn);
+        removeBtn.type="button";
+        removeBtn.className="danger";
+        removeBtn.textContent="移除";
+        removeBtn.disabled=it.queue_status==="playing";
+        removeBtn.onclick=()=>removeItem(it.queue_id);
+        actions.appendChild(removeBtn);
         const fileBtn=document.createElement("button");
-        fileBtn.type="button"; fileBtn.className="secondary"; fileBtn.textContent="file-status"; fileBtn.onclick=()=>showFileStatus(it.song_id); actions.appendChild(fileBtn);
+        fileBtn.type="button";
+        fileBtn.className="secondary";
+        fileBtn.textContent="文件状态";
+        fileBtn.onclick=()=>showFileStatus(it.song_id);
+        actions.appendChild(fileBtn);
         el.queue.appendChild(li);
       });
     }
 
     function renderLocal(){
       el.localList.innerHTML="";
-      if(!state.localList.length){ el.localList.innerHTML='<li class="empty">暂无本地资源</li>'; return; }
-      state.localList.forEach(it=>{
+      if(!state.localList.length){
+        el.localList.innerHTML='<li class="empty"><strong>暂无本地资源</strong>下载成功的歌曲会进入曲库，之后可本地点歌或补分离。</li>';
+        return;
+      }
+      state.localList.forEach((it,index)=>{
         const li=document.createElement("li");
-        li.innerHTML=`<div class="title">${escapeHtml(normalizeTitle(it.title||"未命名歌曲"))}</div><div class="meta">${badgeHtml(it.download_status)} ${badgeHtml(it.separate_status||"pending")} ${badgeHtml(it.is_valid?"valid":"invalid")}</div><div class="meta">文件大小 ${formatBytes(it.file_size)} / 视频轨 ${it.video_track_exists?"有":"无"} / 音频轨 ${it.audio_track_exists?"有":"无"}</div><div class="meta">时长 ${formatTime(it.duration_ms)}${it.width&&it.height?` / ${it.width}x${it.height}`:""}</div>${it.accompaniment_path||it.vocal_path?`<div class="meta">分离结果 ${it.accompaniment_path?"伴奏已生成":"伴奏未生成"} / ${it.vocal_path?"人声已生成":"人声未生成"}</div>`:""}${it.error_code||it.error_message?`<div class="meta">错误 ${escapeHtml(it.error_code||"")}${it.error_message?` / ${escapeHtml(it.error_message)}`:""}</div>`:""}<div class="item-actions"></div>`;
-        const actions=li.querySelector(".item-actions");
+        li.className="item";
+        li.innerHTML=`<div class="split"><div class="marker small"><small>Track</small>${String(index+1).padStart(2,"0")}</div><div><div class="eyeline">Library Item</div><div class="item-title">${escapeHtml(normalizeTitle(it.title||"未命名歌曲"))}</div><div class="item-meta">${badgeHtml(it.download_status)} ${badgeHtml(it.separate_status||"pending")} ${badgeHtml(it.is_valid?"valid":"invalid")}</div><div class="tags"><span class="tag">文件大小 <strong>${formatBytes(it.file_size)}</strong></span><span class="tag">时长 <strong>${formatTime(it.duration_ms)}</strong></span>${it.width&&it.height?`<span class="tag">分辨率 <strong>${it.width}x${it.height}</strong></span>`:""}</div><div class="item-meta">视频轨 ${it.video_track_exists?"有":"无"} / 音频轨 ${it.audio_track_exists?"有":"无"}</div>${it.accompaniment_path||it.vocal_path?`<div class="item-meta">分离结果 ${it.accompaniment_path?"伴奏已生成":"伴奏未生成"} / ${it.vocal_path?"人声已生成":"人声未生成"}</div>`:""}${it.error_code||it.error_message?`<div class="item-meta">错误 ${escapeHtml(it.error_code||"")}${it.error_message?` / ${escapeHtml(it.error_message)}`:""}</div>`:""}<div class="actions"></div></div></div>`;
+        const actions=li.querySelector(".actions");
         const orderBtn=document.createElement("button");
-        orderBtn.type="button"; orderBtn.textContent="本地点歌"; orderBtn.disabled=!it.is_valid||it.download_status!=="success"; orderBtn.onclick=()=>localOrder(it.song_id); actions.appendChild(orderBtn);
+        orderBtn.type="button";
+        orderBtn.textContent="本地点歌";
+        orderBtn.disabled=!it.is_valid||it.download_status!=="success";
+        orderBtn.onclick=()=>localOrder(it.song_id);
+        actions.appendChild(orderBtn);
         const separateBtn=document.createElement("button");
-        separateBtn.type="button"; separateBtn.className="secondary"; separateBtn.textContent="伴奏分离"; separateBtn.disabled=it.download_status!=="success"||it.separate_status==="processing"; separateBtn.onclick=()=>localSeparate(it.song_id); actions.appendChild(separateBtn);
+        separateBtn.type="button";
+        separateBtn.className="secondary";
+        separateBtn.textContent="伴奏分离";
+        separateBtn.disabled=it.download_status!=="success"||it.separate_status==="processing";
+        separateBtn.onclick=()=>localSeparate(it.song_id);
+        actions.appendChild(separateBtn);
         const deleteBtn=document.createElement("button");
-        deleteBtn.type="button"; deleteBtn.className="danger"; deleteBtn.textContent="删除缓存"; deleteBtn.onclick=()=>localDelete(it.song_id); actions.appendChild(deleteBtn);
+        deleteBtn.type="button";
+        deleteBtn.className="danger";
+        deleteBtn.textContent="删除缓存";
+        deleteBtn.onclick=()=>localDelete(it.song_id);
+        actions.appendChild(deleteBtn);
         const fileBtn=document.createElement("button");
-        fileBtn.type="button"; fileBtn.className="secondary"; fileBtn.textContent="file-status"; fileBtn.onclick=()=>showFileStatus(it.song_id); actions.appendChild(fileBtn);
+        fileBtn.type="button";
+        fileBtn.className="secondary";
+        fileBtn.textContent="文件状态";
+        fileBtn.onclick=()=>showFileStatus(it.song_id);
+        actions.appendChild(fileBtn);
         el.localList.appendChild(li);
       });
     }
 
     function renderDownload(){
       const it=state.lastDownload;
-      if(!it){ el.downloadView.innerHTML='<div class="empty">暂无最近下载记录</div>'; return; }
+      if(!it){
+        el.sideLatestTask.textContent="暂无任务";
+        return;
+      }
       const progress=Math.max(0,Math.min(Number(it.progress||0),100));
-      el.downloadView.innerHTML=`<div class="title">${escapeHtml(normalizeTitle(it.title||"未命名歌曲"))}</div><div class="meta">${badgeHtml(it.download_status||"idle")}${it.error_code?` <span>${escapeHtml(it.error_code)}</span>`:""}</div><div class="progress"><div style="width:${progress}%"></div></div><div class="meta">进度 ${progress}%</div>${it.file_path?`<div class="meta">文件：${escapeHtml(it.file_path)}</div>`:""}${it.error_message?`<div class="meta">错误：${escapeHtml(it.error_message)}</div>`:""}`;
+      el.sideLatestTask.textContent=normalizeTitle(it.title||"未命名歌曲");
     }
 
-    function badgeHtml(status){ const t=String(status||"idle"); return `<span class="badge ${badgeClass(t)}">${escapeHtml(t)}</span>`; }
-    function badgeClass(status){ const v=String(status||"").toLowerCase(); if(["success","playing","valid","bound"].includes(v)) return "ok"; if(["failed","error","removed","invalid"].includes(v)) return "err"; if(["downloading","buffering","skipped","pending","paused","processing"].includes(v)) return "warn"; return "idle"; }
-    function normalizeTitle(value){ const text=decodeHtml(String(value||"")).replace(/\s+/g," ").trim(); return text||"未命名歌曲"; }
-    function decodeHtml(value){ const node=document.createElement("textarea"); node.innerHTML=value; return node.value; }
-    function encodeBase64Utf8(value){ const bytes=new TextEncoder().encode(String(value??"")); let binary=""; bytes.forEach(b=>binary+=String.fromCharCode(b)); return btoa(binary); }
-    function escapeHtml(value){ return String(value??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"); }
-    function escapeAttr(value){ return String(value??"").replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-    function resolveCoverUrl(url){ const raw=String(url||"").trim(); return raw?`/api/image/fetch?url=${encodeURIComponent(raw)}`:""; }
-    function formatTime(ms){ const safe=Math.max(0,Number(ms||0)); const s=Math.floor(safe/1000); const m=Math.floor(s/60); return `${String(m).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`; }
+    function renderBars(){
+      let html="";
+      for(let i=0;i<10;i+=1) html+="<span></span>";
+      return html;
+    }
+
+    function syncBusyUi(){
+      toggleBusyButton(el.refreshBtn,state.busy.refresh);
+      toggleBusyButton(el.searchBtn,state.busy.search);
+      el.searchBtn.disabled=state.busy.search;
+      el.refreshBtn.disabled=state.busy.refresh;
+      renderStatus();
+    }
+
+    function toggleBusyButton(button,isBusy){
+      if(!button) return;
+      button.classList.toggle("button-busy",Boolean(isBusy));
+    }
+
+    function setStatus(text){
+      el.statusText.textContent=text;
+      el.statusToastText.textContent=text;
+      el.statusToast.classList.add("show");
+      clearTimeout(statusToastTimer);
+      statusToastTimer=setTimeout(()=>el.statusToast.classList.remove("show"),2200);
+    }
+
+    function badgeHtml(status){
+      const t=String(status||"idle");
+      return `<span class="badge ${badgeClass(t)}">${escapeHtml(t)}</span>`;
+    }
+
+    function badgeClass(status){
+      const v=String(status||"").toLowerCase();
+      if(["success","playing","valid","bound"].includes(v)) return "ok";
+      if(["failed","error","removed","invalid"].includes(v)) return "err";
+      if(["downloading","buffering","skipped","pending","paused","processing"].includes(v)) return "warn";
+      return "idle";
+    }
+
+    function normalizeTitle(value){
+      const text=decodeHtml(String(value||"")).replace(/\s+/g," ").trim();
+      return text||"未命名歌曲";
+    }
+
+    function decodeHtml(value){
+      const node=document.createElement("textarea");
+      node.innerHTML=value;
+      return node.value;
+    }
+
+    function encodeBase64Utf8(value){
+      const bytes=new TextEncoder().encode(String(value??""));
+      let binary="";
+      bytes.forEach(b=>binary+=String.fromCharCode(b));
+      return btoa(binary);
+    }
+
+    function escapeHtml(value){
+      return String(value??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+    }
+
+    function escapeAttr(value){
+      return String(value??"").replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    }
+
+    function resolveCoverUrl(url){
+      const raw=String(url||"").trim();
+      return raw?`/api/image/fetch?url=${encodeURIComponent(raw)}`:"";
+    }
+
+    function formatTime(ms){
+      const safe=Math.max(0,Number(ms||0));
+      const s=Math.floor(safe/1000);
+      const m=Math.floor(s/60);
+      return `${String(m).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+    }
+
     function formatDurationSeconds(seconds){ return formatTime(Number(seconds||0)*1000); }
-    function formatBytes(bytes){ const value=Number(bytes||0); if(value<=0)return"0 B"; if(value<1024)return`${value} B`; if(value<1024*1024)return`${(value/1024).toFixed(1)} KB`; if(value<1024*1024*1024)return`${(value/1024/1024).toFixed(1)} MB`; return`${(value/1024/1024/1024).toFixed(1)} GB`; }
-    function setStatus(text){ el.statusText.textContent=text; }
-    async function getJson(url){ const r=await fetch(url,{headers:{Accept:"application/json"}}); return r.json(); }
-    async function postJson(url,body){ const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)}); return r.json(); }
-    function getOrCreateClientId(){ const existing=localStorage.getItem(storageKeys.clientId); if(existing) return existing; const created=typeof crypto!=="undefined"&&typeof crypto.randomUUID==="function"?`web-${crypto.randomUUID()}`:`web-${Date.now()}-${Math.random().toString(16).slice(2)}`; localStorage.setItem(storageKeys.clientId,created); return created; }
+
+    function formatBytes(bytes){
+      const value=Number(bytes||0);
+      if(value<=0)return"0 B";
+      if(value<1024)return`${value} B`;
+      if(value<1024*1024)return`${(value/1024).toFixed(1)} KB`;
+      if(value<1024*1024*1024)return`${(value/1024/1024).toFixed(1)} MB`;
+      return`${(value/1024/1024/1024).toFixed(1)} GB`;
+    }
+
+    function progressPercent(current,duration){
+      const total=Number(duration||0);
+      if(total<=0) return 0;
+      return Math.max(0,Math.min(100,Math.round(Number(current||0)/total*100)));
+    }
+
+    function shortenId(value){
+      const text=String(value||"");
+      return text.length>12?`${text.slice(0,6)}...${text.slice(-4)}`:text;
+    }
+
+    function shortenPath(value){
+      const text=String(value||"");
+      return text.length>28?`...${text.slice(-28)}`:text;
+    }
+
+    async function getJson(url){
+      const r=await fetch(url,{headers:{Accept:"application/json"}});
+      return r.json();
+    }
+
+    async function postJson(url,body){
+      const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)});
+      return r.json();
+    }
+
+    function getOrCreateClientId(){
+      const existing=localStorage.getItem(storageKeys.clientId);
+      if(existing) return existing;
+      const created=typeof crypto!=="undefined"&&typeof crypto.randomUUID==="function"?`web-${crypto.randomUUID()}`:`web-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      localStorage.setItem(storageKeys.clientId,created);
+      return created;
+    }
   </script>
 </body>
 </html>
